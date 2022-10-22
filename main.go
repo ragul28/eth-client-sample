@@ -8,11 +8,17 @@ import (
 )
 
 func main() {
-	client, err := ethclient.Dial("http://localhost:8545")
+	client, err := ethclient.Dial(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("we have a connection")
-	_ = client // we'll use this in the upcoming sections
+	currentBlock(client)
+func currentBlock(client *ethclient.Client) {
+	block, err := client.BlockByNumber(context.Background(), nil)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(block.Number())
+}
 }

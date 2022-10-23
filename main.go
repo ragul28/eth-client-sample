@@ -22,12 +22,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	currentBlock(client)
+	address := createWallet()
+	fmt.Println("New Wallet addr:", address)
 
-	account := common.HexToAddress("0x21404C3Affb6e6E06FB0d2CADE323B18eA6F9018")
+	account := common.HexToAddress(address)
 	getBalance(client, account)
-
-	createWallet()
 }
 
 func currentBlock(client *ethclient.Client) {
@@ -46,14 +45,15 @@ func getBalance(client *ethclient.Client, account common.Address) {
 	fmt.Println(balance)
 }
 
-func createWallet() {
+func createWallet() string {
+	fmt.Println("Create New Wallet..")
 	privateKey, err := crypto.GenerateKey()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
-	fmt.Println(hexutil.Encode(privateKeyBytes)[2:])
+	fmt.Println("Private key in bytes:", hexutil.Encode(privateKeyBytes)[2:])
 
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
@@ -62,8 +62,9 @@ func createWallet() {
 	}
 
 	publicKeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
-	fmt.Println(hexutil.Encode(publicKeyBytes)[4:])
+	fmt.Println("public key in bytes:", hexutil.Encode(publicKeyBytes)[4:])
 
 	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
-	fmt.Println(address)
+
+	return address
 }

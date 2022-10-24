@@ -17,16 +17,22 @@ var (
 )
 
 func main() {
-	client, err := ethclient.Dial(url)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	address := createWallet()
 	fmt.Println("New Wallet addr:", address)
 
 	account := common.HexToAddress(address)
+	client := createClient()
 	getBalance(client, account)
+}
+
+func createClient() *ethclient.Client {
+	client, err := ethclient.Dial(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return client
 }
 
 func currentBlock(client *ethclient.Client) {
